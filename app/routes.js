@@ -74,9 +74,12 @@ module.exports = function(app, passport) {
         //处理qq验证用户后的回调
         app.get('/auth/qq/callback',
             passport.authenticate('qq', {
-                successRedirect: '/profile',
+                // successRedirect: '/profile',
                 failureRedirect: '/'
-            }));
+            }), function (req, res) {
+                //Successful authentication
+                res.redirect('/profile');
+            });
 
     // twitter --------------------------------
 
@@ -131,7 +134,12 @@ module.exports = function(app, passport) {
 
     // qq -------------------------------------
         //发送给qq做验证
-        app.get('/connect/qq', passport.authorize('qq'));
+        app.get('/connect/qq', passport.authorize('qq')
+        //     , function (req, res) {
+        //     // The request will be redirected to qq for authentication, so this
+        //     // function will not be called.
+        // }
+        );
 
         //处理qq验证用户后的回调
         app.get('/connect/qq/callback',

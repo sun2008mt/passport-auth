@@ -17,7 +17,8 @@ var userSchema = mongoose.Schema({
     },
     qq               : {
         id           : String,
-        token        : String
+        token        : String,
+        username     : String
     },
     twitter          : {
         id           : String,

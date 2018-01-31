@@ -1,6 +1,6 @@
 // load all the things we need
 var LocalStrategy    = require('passport-local').Strategy;
-var FacebookStrategy = require('passport-facebook').Strategy;
+var FacebookStrategy = require('passpozrt-facebook').Strategy;
 var TwitterStrategy  = require('passport-twitter').Strategy;
 var GoogleStrategy   = require('passport-google-oauth').OAuth2Strategy;
 var QQStrategy       = require('passport-qq').Strategy;
@@ -152,6 +152,18 @@ module.exports = function(passport) {
         // asynchronous
         process.nextTick(function() {
 
+            console.log("**************************")
+            console.dir(req.user);
+            console.log("**************************")
+            console.dir(token);
+            console.log("**************************")
+            console.dir(refreshToken);
+            console.log("**************************")
+            console.dir(profile);
+            console.log("**************************")
+            console.dir(done);
+            console.log("**************************")
+
             // check if the user is already logged in
             if (!req.user) {
 
@@ -165,7 +177,7 @@ module.exports = function(passport) {
                         if (!user.facebook.token) {
                             user.facebook.token = token;
                             user.facebook.name  = profile.name.givenName + ' ' + profile.name.familyName;
-                            user.facebook.email = (profile.emails[0].value || '').toLowerCase();
+                            // user.facebook.email = (profile.emails[0].value || '').toLowerCase();
 
                             user.save(function(err) {
                                 if (err)
@@ -180,14 +192,10 @@ module.exports = function(passport) {
                         // if there is no user, create them
                         var newUser            = new User();
 
-                        console.log("***********************")
-                        console.log(profile);
-                        console.log("***********************")
-
                         newUser.facebook.id    = profile.id;
                         newUser.facebook.token = token;
                         newUser.facebook.name  = profile.name.givenName + ' ' + profile.name.familyName;
-                        newUser.facebook.email = (profile.emails[0].value || '').toLowerCase();
+                        // newUser.facebook.email = (profile.emails[0].value || '').toLowerCase();
 
                         newUser.save(function(err) {
                             if (err)
@@ -202,18 +210,10 @@ module.exports = function(passport) {
                 // user already exists and is logged in, we have to link accounts
                 var user            = req.user; // pull the user out of the session
 
-                console.log("***********************")
-                console.log(user);
-                console.log("***********************")
-
-                console.log("***********************")
-                console.log(profile);
-                console.log("***********************")
-
                 user.facebook.id    = profile.id;
                 user.facebook.token = token;
                 user.facebook.name  = profile.name.givenName + ' ' + profile.name.familyName;
-                user.facebook.email = (profile.emails[0].value || '').toLowerCase();
+                // user.facebook.email = (profile.emails[0].value || '').toLowerCase();
 
                 user.save(function(err) {
                     if (err)
@@ -232,9 +232,20 @@ module.exports = function(passport) {
     // =========================================================================
     const qqStrategy = configAuth.qqAuth;
     passport.use(new QQStrategy(qqStrategy,
-    function (req, accessToken, refreshToken, profile, done) {
+    function (accessToken, refreshToken, profile, done) {
         // asynchronous verification, for effect...
         process.nextTick(function () {
+
+            console.log("**************************")
+            console.dir(accessToken);
+            console.log("**************************")
+            console.dir(refreshToken);
+            console.log("**************************")
+            console.dir(profile);
+            console.log("**************************")
+            console.dir(done);
+            console.log("**************************")
+
             //检查用户是否已经登录
             if (!req.user) {
 
@@ -245,7 +256,8 @@ module.exports = function(passport) {
                     if (user) {
                         //如果qq用户已经存在但是没有token(qq用户被关联后又被取消关联)
                         if (!user.qq.token) {
-                            user.qq.token = accessToken;
+                            user.qq.token = refreshToken;
+                            user.qq.username = profile.nickname;
 
                             user.save(function(err) {
                                 if (err)
@@ -256,10 +268,11 @@ module.exports = function(passport) {
                         }
                     } else {
                         //如果没有qq用户，则创建
-                        var newUser                 = new User();
+                        var newUser = new User();
 
-                        newUser.qq.id          = profile.id;
-                        newUser.qq.token       = accessToken;
+                        newUser.qq.id = profile.id;
+                        newUser.qq.token = refreshToken;
+                        newUser.qq.username = profile.nickname;
 
                         newUser.save(function(err) {
                             if (err)
@@ -272,8 +285,10 @@ module.exports = function(passport) {
             } else {
                 //用户存在并且已经登录，则需要关联qq用户到当前用户
                 var user = req.user;
+
                 user.qq.id = profile.id;
-                user.qq.token = accessToken;
+                user.qq.token = refreshToken;
+                user.qq.username = profile.nickname;
 
                 user.save(function (err) {
                     if (err)
