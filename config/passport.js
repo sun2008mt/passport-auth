@@ -178,6 +178,10 @@ module.exports = function(passport) {
                         // if there is no user, create them
                         var newUser            = new User();
 
+                        console.log("***********************")
+                        console.log(profile);
+                        console.log("***********************")
+
                         newUser.facebook.id    = profile.id;
                         newUser.facebook.token = token;
                         newUser.facebook.name  = profile.name.givenName + ' ' + profile.name.familyName;
@@ -195,6 +199,14 @@ module.exports = function(passport) {
             } else {
                 // user already exists and is logged in, we have to link accounts
                 var user            = req.user; // pull the user out of the session
+
+                console.log("***********************")
+                console.log(user);
+                console.log("***********************")
+
+                console.log("***********************")
+                console.log(profile);
+                console.log("***********************")
 
                 user.facebook.id    = profile.id;
                 user.facebook.token = token;
