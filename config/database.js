@@ -1,5 +1,5 @@
 // config/database.js
-var baseConfig = require('base');
+var baseConfig = require('./base');
 
 module.exports = {
 
