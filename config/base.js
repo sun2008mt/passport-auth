@@ -3,7 +3,7 @@ const appPort = 5005;
 const mongoPort = 27017;
 
 const baseConfig = {
-    baseURL: ip + appPort,
+    baseURL: ip + ':' + appPort,
     mongoConfig: 'mongodb://passport:passport@' + ip + ':' + mongoPort + '/passport'
 };
 
