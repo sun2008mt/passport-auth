@@ -236,7 +236,7 @@ module.exports = function(passport) {
         // asynchronous verification, for effect...
         process.nextTick(function () {
             console.log("**************************")
-            console.dir(req);
+            console.dir(req.user);
             console.log("**************************")
             console.dir(accessToken);
             console.log("**************************")
@@ -257,7 +257,7 @@ module.exports = function(passport) {
                     if (user) {
                         //如果qq用户已经存在但是没有token(qq用户被关联后又被取消关联)
                         if (!user.qq.token) {
-                            user.qq.token = refreshToken;
+                            user.qq.token = accessToken;
                             user.qq.username = profile.nickname;
 
                             user.save(function(err) {
@@ -272,7 +272,7 @@ module.exports = function(passport) {
                         var newUser = new User();
 
                         newUser.qq.id = profile.id;
-                        newUser.qq.token = refreshToken;
+                        newUser.qq.token = accessToken;
                         newUser.qq.username = profile.nickname;
 
                         newUser.save(function(err) {
@@ -288,7 +288,7 @@ module.exports = function(passport) {
                 var user = req.user;
 
                 user.qq.id = profile.id;
-                user.qq.token = refreshToken;
+                user.qq.token = accessToken;
                 user.qq.username = profile.nickname;
 
                 user.save(function (err) {
@@ -298,12 +298,6 @@ module.exports = function(passport) {
                     return done(null, user);
                 });
             }
-
-            // To keep the example simple, the user's qq profile is returned to
-            // represent the logged-in user.  In a typical application, you would want
-            // to associate the qq account with a user record in your database,
-            // and return that user instead.
-            return done(null, profile);
         });
     }));
 
