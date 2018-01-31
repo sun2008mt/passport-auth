@@ -1,8 +1,10 @@
+const ip = 'http://www.geonoon.net';
+const appPort = 5005;
+const mongoPort = 27017;
+
 const baseConfig = {
-    baseIP: 'http://www.geonoon.net',
-    appPort: 5005,
-    baseURL: 'http://www.geonoon.net:5005',
-    mongoConfig: 'mongodb://passport:passport@www.geonoon.net:27017/passport'
+    baseURL: ip + appPort,
+    mongoConfig: 'mongodb://passport:passport@' + ip + ':' + mongoPort + '/passport'
 };
 
 module.exports = baseConfig;
