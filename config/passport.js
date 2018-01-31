@@ -1,6 +1,6 @@
 // load all the things we need
 var LocalStrategy    = require('passport-local').Strategy;
-var FacebookStrategy = require('passpozrt-facebook').Strategy;
+var FacebookStrategy = require('passport-facebook').Strategy;
 var TwitterStrategy  = require('passport-twitter').Strategy;
 var GoogleStrategy   = require('passport-google-oauth').OAuth2Strategy;
 var QQStrategy       = require('passport-qq').Strategy;
@@ -232,10 +232,11 @@ module.exports = function(passport) {
     // =========================================================================
     const qqStrategy = configAuth.qqAuth;
     passport.use(new QQStrategy(qqStrategy,
-    function (accessToken, refreshToken, profile, done) {
+    function (req, accessToken, refreshToken, profile, done) {
         // asynchronous verification, for effect...
         process.nextTick(function () {
-
+            console.log("**************************")
+            console.dir(req);
             console.log("**************************")
             console.dir(accessToken);
             console.log("**************************")

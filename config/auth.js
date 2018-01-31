@@ -14,9 +14,10 @@ module.exports = {
     },
 
     'qqAuth'          : {
-        'clientID'        : '101444503',
-        'clientSecret'    : '5e8587617ebfa79545939e034fadb01c',
-        'callbackURL'     : baseConfig.baseURL + '/auth/qq/callback'
+        'clientID'          : '101444503',
+        'clientSecret'      : '5e8587617ebfa79545939e034fadb01c',
+        'callbackURL'       : baseConfig.baseURL + '/auth/qq/callback',
+        'passReqToCallback' : true      // 允许从路由中传入req参数(用来判断是否有用户登录)
     },
 
     'twitterAuth' : {
