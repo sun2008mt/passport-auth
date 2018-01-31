@@ -105,6 +105,28 @@
         </div>
     </div>
 
+    <div class="row">
+
+        <!-- QQ INFORMATION -->
+        <div class="col-sm-6">
+            <div class="well">
+                <h3 class="text-info"><span class="fa fa-qq"></span> QQ</h3>
+
+                <% if (user.qq.token) { %>
+                <p>
+                    <strong>id</strong>: <%= user.qq.id %><br>
+                    <strong>token</strong>: <%= user.qq.token %><br>
+                </p>
+
+                <a href="/unlink/qq" class="btn btn-warn">Unlink</a>
+                <% } else { %>
+                <a href="/connect/qq" class="btn btn-warn">Connect QQ</a>
+                <% } %>
+
+            </div>
+        </div>
+    </div>
+
     <div class="text-center">
         <p>A demo by <a href="http://scotch.io">Scotch</a>.</p>
         <p>Visit the <a href="http://scotch.io/tutorials/javascript/easy-node-authentication-setup-and-local">tutorial</a>.</p>
