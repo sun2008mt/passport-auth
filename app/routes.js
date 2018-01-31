@@ -63,6 +63,21 @@ module.exports = function(app, passport) {
                 failureRedirect : '/'
             }));
 
+    // qq -------------------------------------
+
+        //发送给qq做验证
+        app.get('/auth/qq', passport.authenticate('qq'), function (req, res) {
+            // The request will be redirected to qq for authentication, so this
+            // function will not be called.
+        });
+
+        //处理qq验证用户后的回调
+        app.get('/auth/qq/callback',
+            passport.authenticate('qq', {
+                successRedirect: '/profile',
+                failureRedirect: '/'
+            }));
+
     // twitter --------------------------------
 
         // send to twitter to do the authentication
@@ -114,6 +129,18 @@ module.exports = function(app, passport) {
                 failureRedirect : '/'
             }));
 
+    // qq -------------------------------------
+        //发送给qq做验证
+        app.get('/connect/qq', passport.authorize('qq'));
+
+        //处理qq验证用户后的回调
+        app.get('/connect/qq/callback',
+            passport.authorize('qq', {
+                successRedirect: '/profile',
+                failureRedirect: '/'
+            }));
+
+
     // twitter --------------------------------
 
         // send to twitter to do the authentication
@@ -161,6 +188,15 @@ module.exports = function(app, passport) {
         var user            = req.user;
         user.facebook.token = undefined;
         user.save(function(err) {
+            res.redirect('/profile');
+        });
+    });
+
+    // qq -------------------------------------
+    app.get('/unlink/qq', isLoggedIn, function (req, res) {
+        var user           = req.user;
+        user.qq.token      = undefined;
+        user.save(function (err) {
             res.redirect('/profile');
         });
     });

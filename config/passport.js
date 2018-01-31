@@ -3,6 +3,8 @@ var LocalStrategy    = require('passport-local').Strategy;
 var FacebookStrategy = require('passport-facebook').Strategy;
 var TwitterStrategy  = require('passport-twitter').Strategy;
 var GoogleStrategy   = require('passport-google-oauth').OAuth2Strategy;
+var QQStrategy       = require('passport-qq').Strategy;
+
 
 // load up the user model
 var User       = require('../app/models/user');
@@ -223,6 +225,70 @@ module.exports = function(passport) {
             }
         });
 
+    }));
+
+    // =========================================================================
+    // QQ =================================================================
+    // =========================================================================
+    const qqStrategy = configAuth.qqAuth;
+    passport.use(new QQStrategy(qqStrategy,
+    function (req, accessToken, refreshToken, profile, done) {
+        // asynchronous verification, for effect...
+        process.nextTick(function () {
+            //检查用户是否已经登录
+            if (!req.user) {
+
+                User.findOne({ 'qq.id' : profile.id}, function (err, user) {
+                    if (err)
+                        return done(err);
+
+                    if (user) {
+                        //如果qq用户已经存在但是没有token(qq用户被关联后又被取消关联)
+                        if (!user.qq.token) {
+                            user.qq.token = accessToken;
+
+                            user.save(function(err) {
+                                if (err)
+                                    return done(err);
+
+                                return done(null, user);
+                            });
+                        }
+                    } else {
+                        //如果没有qq用户，则创建
+                        var newUser                 = new User();
+
+                        newUser.qq.id          = profile.id;
+                        newUser.qq.token       = accessToken;
+
+                        newUser.save(function(err) {
+                            if (err)
+                                return done(err);
+
+                            return done(null, newUser);
+                        });
+                    }
+                });
+            } else {
+                //用户存在并且已经登录，则需要关联qq用户到当前用户
+                var user = req.user;
+                user.qq.id = profile.id;
+                user.qq.token = accessToken;
+
+                user.save(function (err) {
+                    if (err)
+                        return done(err);
+
+                    return done(null, user);
+                });
+            }
+
+            // To keep the example simple, the user's qq profile is returned to
+            // represent the logged-in user.  In a typical application, you would want
+            // to associate the qq account with a user record in your database,
+            // and return that user instead.
+            return done(null, profile);
+        });
     }));
 
     // =========================================================================
