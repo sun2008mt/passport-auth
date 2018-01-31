@@ -1,4 +1,4 @@
-const ip = 'www.geonoon.net';
+const ip = 'Your IP Address';
 const appPort = 5005;
 const mongoPort = 27017;
 
