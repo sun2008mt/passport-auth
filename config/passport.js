@@ -152,8 +152,8 @@ module.exports = function(passport) {
         // asynchronous
         process.nextTick(function() {
 
-            console.log("**************************")
-            console.dir(req.user);
+            // console.log("**************************")
+            // console.dir(req.user);
             console.log("**************************")
             console.dir(token);
             console.log("**************************")
@@ -235,8 +235,8 @@ module.exports = function(passport) {
     function (req, accessToken, refreshToken, profile, done) {
         // asynchronous verification, for effect...
         process.nextTick(function () {
-            console.log("**************************")
-            console.dir(req.user);
+            // console.log("**************************")
+            // console.dir(req.user);
             console.log("**************************")
             console.dir(accessToken);
             console.log("**************************")
@@ -250,11 +250,14 @@ module.exports = function(passport) {
             //检查用户是否已经登录
             if (!req.user) {
 
+                console.log("用户未登录...");
+
                 User.findOne({ 'qq.id' : profile.id}, function (err, user) {
                     if (err)
                         return done(err);
 
                     if (user) {
+                        console.log("用户存在并且关联过qq但是后来又取消关联...");
                         //如果qq用户已经存在但是没有token(qq用户被关联后又被取消关联)
                         if (!user.qq.token) {
                             user.qq.token = accessToken;
@@ -268,6 +271,7 @@ module.exports = function(passport) {
                             });
                         }
                     } else {
+                        console.log("用户不存在或者没有关联过qq...");
                         //如果没有qq用户，则创建
                         var newUser = new User();
 
@@ -284,6 +288,8 @@ module.exports = function(passport) {
                     }
                 });
             } else {
+                console.log("用户存在并且已经登录...");
+
                 //用户存在并且已经登录，则需要关联qq用户到当前用户
                 var user = req.user;
 
